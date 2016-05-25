@@ -116,12 +116,26 @@ namespace CincyLib.Laser
                 if (int.TryParse(highVoltageString, out hv))
                     LaserWebPanel.HighVoltage = GetHighVoltage(hv);
 
+                ApplyCorrections(LaserWebPanel);
+
                 return true;
             }
             catch { }
 
             return false;
             
+        }
+
+        private void ApplyCorrections(LaserWebPanel lwp)
+        {
+            foreach (var msg in lwp.FYIMessages)
+            {
+                if (msg.ToLower().Contains("laser high voltage is off"))
+                {
+                    lwp.HighVoltage = HighVoltage.Off;
+                    break;
+                }
+            }
         }
 
         public bool Read(Uri uri)

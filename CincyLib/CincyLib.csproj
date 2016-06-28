@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Laser\LaserWebPanel.cs" />
     <Compile Include="Laser\ProductLog.cs" />
+    <Compile Include="PressBrake\WebPanel.cs" />
     <Compile Include="SheetMetal.cs" />
     <Compile Include="Laser\AssistGasType.cs" />
     <Compile Include="Laser\MaterialLib.cs" />

@@ -95,7 +95,8 @@ namespace CincyLib.Laser
                 reader.BaseStream.Seek(4, SeekOrigin.Current);
                 MaterialLib.RampedPierceStartPower = reader.ReadInt16();
 
-                MaterialLib.RampedPierceSteps = new RampedPierceStep[20];
+                MaterialLib.RampedPierceSteps = new RampedPierceStep[steps];
+
 
                 for (int i = 0; i < steps; ++i)
                 {
@@ -104,7 +105,9 @@ namespace CincyLib.Laser
                     MaterialLib.RampedPierceSteps[i].Power = reader.ReadInt16();
                 }
 
-                var remaining = MaterialLib.RampedPierceSteps.Length - steps;
+                const int MAX_STEPS = 20;
+
+                var remaining = MAX_STEPS - steps;
                 reader.BaseStream.Seek(6 * remaining, SeekOrigin.Current);
 
                 int length = reader.ReadByte();

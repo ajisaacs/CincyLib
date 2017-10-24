@@ -95,13 +95,39 @@ namespace CincyLib.PressBrake
             var xml = XDocument.Load(stream);
 
             var data = xml.Root.Element("PressBrakeProgram");
-            Program.Version = int.Parse(data.Attribute("Version").Value);
-            Program.MatThick = double.Parse(data.Attribute("MatThick").Value);
-            Program.KFactor = double.Parse(data.Attribute("KFactor").Value);
-            Program.TeachName = data.Attribute("TeachName").Value;
-            Program.PartName = data.Attribute("PartName").Value;
-            Program.SetupNotes = data.Attribute("SetupNotes").Value;
-            Program.ProgNotes = data.Attribute("ProgNotes").Value;
+
+			var version = data.Attribute("Version")?.Value;
+			var matthick = data.Attribute("MatThick")?.Value;
+			var kfactor = data.Attribute("KFactor")?.Value;
+
+			if (version != null)
+			{
+				int v;
+
+				if (int.TryParse(version, out v))
+					Program.Version = v;
+			}
+
+			if (matthick != null)
+			{
+				double t;
+
+				if (double.TryParse(matthick, out t))
+					Program.MatThick = t;
+			}
+
+			if (kfactor != null)
+			{
+				double k;
+
+				if (double.TryParse(kfactor, out k))
+					Program.KFactor = k;
+			}
+
+            Program.TeachName = data.Attribute("TeachName")?.Value;
+            Program.PartName = data.Attribute("PartName")?.Value;
+            Program.SetupNotes = data.Attribute("SetupNotes")?.Value;
+            Program.ProgNotes = data.Attribute("ProgNotes")?.Value;
             var RZEnabled = int.Parse(data.Attribute("RZEnabled").Value);
             Program.RZEnabled = Convert.ToBoolean(RZEnabled);
 

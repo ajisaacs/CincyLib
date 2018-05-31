@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CincyLib.Laser
 {
@@ -28,11 +29,13 @@ namespace CincyLib.Laser
                 if (splitIndex == -1)
                     continue;
 
-                curRecord = new Record();
-                log.Records.Add(curRecord);
+				var dateString = line.Remove(splitIndex - 1);
 
-                var dateString = line.Remove(splitIndex - 1);
-                curRecord.Date = DateTime.Parse(dateString);
+				if (dateString.Contains("..."))
+					continue;
+
+				curRecord = new Record();
+				curRecord.Date = DateTime.Parse(dateString);
 
                 var programString = line.Substring(splitIndex + 8);
                 curRecord.ProgramFile = ReadBetweenQuotes(programString);
@@ -64,9 +67,11 @@ namespace CincyLib.Laser
                         curRecord.CutRecords.Add(cutRecord);
                     }
                 }
-            }
 
-            return log;
+				log.Records.Add(curRecord);
+			}
+
+			return log;
         }
 
         private static int LeadingWhitespaceCount(string text)
@@ -108,6 +113,11 @@ namespace CincyLib.Laser
         public string ProgramFile { get; set; }
         public List<string> LibraryFiles { get; set; }
         public List<CutRecord> CutRecords { get; set; }
+
+		public TimeSpan TotalCycleTime
+		{
+			get { return TimeSpan.FromTicks(CutRecords.Sum(r => r.CycleTime.Ticks)); }
+		}
     }
 
     public class CutRecord

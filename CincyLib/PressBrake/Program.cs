@@ -23,7 +23,9 @@ namespace CincyLib.PressBrake
 
         public double MatThick { get; set; }
 
-        public double KFactor { get; set; }
+		public MatType MatType { get; set; }
+
+		public double KFactor { get; set; }
 
         public string TeachName { get; set; }
 
@@ -55,6 +57,15 @@ namespace CincyLib.PressBrake
             return reader.Program;
         }
     }
+
+	public enum MatType
+	{
+		MildSteel,
+		HighStrengthSteel,
+		Stainless,
+		SoftAluminum,
+		HardAluminum
+	}
 
     public class ProgramReader
     {
@@ -98,6 +109,7 @@ namespace CincyLib.PressBrake
 
 			var version = data.Attribute("Version")?.Value;
 			var matthick = data.Attribute("MatThick")?.Value;
+			var mattype = GetMaterialType(data.Attribute("MatType")?.Value);
 			var kfactor = data.Attribute("KFactor")?.Value;
 
 			if (version != null)
@@ -159,8 +171,10 @@ namespace CincyLib.PressBrake
             setup.Name = x.Attribute("Name").Value;
             setup.Id = x.Attribute("ID").ToInt();
             setup.Length = x.Attribute("Length").ToDouble();
+			setup.StackedHolderType = x.Attribute("StackedHolderType").ToInt();
+			setup.HolderHeight = x.Attribute("HolderHeight").ToDouble();
 
-            foreach (var item in x.Descendants("SegEntry"))
+			foreach (var item in x.Descendants("SegEntry"))
             {
                 var entry = new SegEntry();
                 entry.SegValue = item.Attribute("SegValue").ToDouble();
@@ -200,6 +214,33 @@ namespace CincyLib.PressBrake
             step.SideFlgHeight = x.Attribute("SideFlgHeight").ToDouble();
             return step;
         }
+
+		private MatType GetMaterialType(string value)
+		{
+			if (value == null)
+				return MatType.MildSteel;
+
+			int i;
+
+			if (!int.TryParse(value, out i))
+				return MatType.MildSteel;
+
+			switch (i)
+			{
+				case 0:
+					return MatType.MildSteel;
+				case 1:
+					return MatType.HighStrengthSteel;
+				case 2:
+					return MatType.Stainless;
+				case 3:
+					return MatType.SoftAluminum;
+				case 4:
+					return MatType.HardAluminum;
+			}
+
+			return MatType.MildSteel;
+		}
     }
 
     static class Extensions
@@ -257,7 +298,11 @@ namespace CincyLib.PressBrake
 
         public double Length { get; set; }
 
-        public List<SegEntry> Segments { get; set; }
+		public int StackedHolderType { get; set; }
+
+		public double HolderHeight { get; set; }
+
+		public List<SegEntry> Segments { get; set; }
     }
 
     public class SegEntry

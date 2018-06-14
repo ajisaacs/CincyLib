@@ -109,7 +109,7 @@ namespace CincyLib.PressBrake
 
 			var version = data.Attribute("Version")?.Value;
 			var matthick = data.Attribute("MatThick")?.Value;
-			var mattype = GetMaterialType(data.Attribute("MatType")?.Value);
+			Program.MatType = GetMaterialType(data.Attribute("MatType")?.Value);
 			var kfactor = data.Attribute("KFactor")?.Value;
 
 			if (version != null)

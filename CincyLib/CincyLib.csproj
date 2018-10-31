@@ -38,7 +38,13 @@
   <ItemGroup>
     <Compile Include="Laser\LaserWebPanel.cs" />
     <Compile Include="Laser\ProductLog.cs" />
+    <Compile Include="PressBrake\Extensions.cs" />
+    <Compile Include="PressBrake\MatType.cs" />
     <Compile Include="PressBrake\Program.cs" />
+    <Compile Include="PressBrake\ProgramReader.cs" />
+    <Compile Include="PressBrake\SegEntry.cs" />
+    <Compile Include="PressBrake\Step.cs" />
+    <Compile Include="PressBrake\ToolSetup.cs" />
     <Compile Include="PressBrake\WebPanel.cs" />
     <Compile Include="SheetMetal.cs" />
     <Compile Include="Laser\AssistGasType.cs" />

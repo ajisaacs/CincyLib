@@ -23,7 +23,7 @@ namespace CincyLib.PressBrake
 
         public double BendRadius()
         {
-            double r1 = lowerTool.BendRadius();
+            double r1 = lowerTool.DevelopedRadius();
             double r2 = upperTool.Radius;
             return r1 > r2 ? r1 : r2;
         }
@@ -48,7 +48,7 @@ namespace CincyLib.PressBrake
 
         public void Print()
         {
-            Console.WriteLine("{0} / {1}", lowerTool.Name, upperTool.Name);
+            Console.WriteLine("{0} / {1}", lowerTool.ToolName, upperTool.ToolName);
             Console.WriteLine("  Generates an inside radius of:             {0}", BendRadius().ToString("n3") + "\"");
             Console.WriteLine("  Usable on materials less than or equal to: {0}", BendRadius().ToString("n3") + "\"");
             Console.WriteLine("  Capable of bends greater than or equal to: {0}", lowerTool.Angle.ToString("n0") + " degrees");

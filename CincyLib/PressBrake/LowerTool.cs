@@ -1,108 +1,87 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
-using System.Xml;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace CincyLib.PressBrake
 {
     public class LowerTool
     {
-        /// <summary>
-        /// The name of the file
-        /// </summary>
-        public string Name;
+        public LowerTool()
+        {
+            Segments = new List<ToolSegment>();
+        }
 
-        public string ToolName;
-        public int Type;
-        public double Length;
-        public double Height;
-        public double Clearance;
-        public double MaxLoad;
-        public double Angle;
-        public double Radius;
-        public double VOpening;
-        public double Offset;
+        public string FilePath { get; set; }
+        public List<ToolSegment> Segments { get; set; }
+        public int Version { get; set; }
+        public string ToolName { get; set; }
+        public int Type { get; set; }
+        public double Length { get; set; }
+        public double Height { get; set; }
+        public double Clearance { get; set; }
+        public double MaxLoad { get; set; }
+        public double Angle { get; set; }
+        public double Radius { get; set; }
+        public double VOpening { get; set; }
+        public double Offset { get; set; }
 
-        public double BendRadius()
+        public double DevelopedRadius()
         {
             return VOpening * 0.15625;
         }
 
+        public bool IsSegmented
+        {
+            get { return Segments.Count > 0; }
+        }
+
         public static LowerTool Load(string xmlpath)
         {
-            var lowerTool = new LowerTool();
-            var reader = XmlReader.Create(xmlpath);
+            var stream = File.OpenRead(xmlpath);
+            var tool = Load(stream);
+            tool.FilePath = xmlpath;
+            return tool;
+        }
 
-            try
+        public static LowerTool Load(Stream stream)
+        {
+            var t = new LowerTool();
+
+            var xml = XDocument.Load(stream);
+            var data = xml.Root.Element("LowerTool");
+
+            t.Version = data.Attribute("Version").ToInt();
+            t.ToolName = data.Attribute("ToolName")?.Value;
+            t.Type = data.Attribute("Type").ToInt();
+            t.Height = data.Attribute("Height").ToDouble();
+            t.Clearance = data.Attribute("Clearance").ToDouble();
+            t.MaxLoad = data.Attribute("MaxLoad").ToDouble();
+            t.Angle = data.Attribute("Angle").ToDouble();
+            t.Radius = data.Attribute("Radius").ToDouble();
+            t.VOpening = data.Attribute("VeeOpening").ToDouble();
+
+            foreach (var item in data.Element("SegmentList").Descendants("ToolSeg"))
             {
-                while (reader.Read())
-                {
-                    if (reader.IsStartElement())
-                    {
-                        switch (reader.Name)
-                        {
-                            case "LowerTool":
-                                lowerTool.Name = Path.GetFileNameWithoutExtension(xmlpath);
-                                lowerTool.ToolName = reader.GetAttribute("ToolName");
+                var seg = new ToolSegment();
+                seg.Length = item.Attribute("Length").ToDouble();
+                seg.Quantity = item.Attribute("Quantity").ToInt(1);
 
-                                int type;
-                                int.TryParse(reader.GetAttribute("Type"), out type);
-                                lowerTool.Type = type;
-
-                                double length;
-                                double.TryParse(reader.GetAttribute("Length"), out length);
-                                lowerTool.Length = length;
-
-                                double height;
-                                double.TryParse(reader.GetAttribute("Height"), out height);
-                                lowerTool.Height = height;
-
-                                double clearance;
-                                double.TryParse(reader.GetAttribute("Clearance"), out clearance);
-                                lowerTool.Clearance = clearance;
-
-                                double maxload;
-                                double.TryParse(reader.GetAttribute("MaxLoad"), out maxload);
-                                lowerTool.MaxLoad = maxload;
-
-                                double angle;
-                                double.TryParse(reader.GetAttribute("Angle"), out angle);
-                                lowerTool.Angle = angle;
-
-                                double radius;
-                                double.TryParse(reader.GetAttribute("Radius"), out radius);
-                                lowerTool.Radius = radius;
-
-                                double vopening;
-                                double.TryParse(reader.GetAttribute("VeeOpening"), out vopening);
-                                lowerTool.VOpening = vopening;
-
-                                double offset;
-                                double.TryParse(reader.GetAttribute("Offset"), out offset);
-                                lowerTool.Offset = offset;
-
-                                break;
-                        }
-                    }
-                }
-            }
-            catch (SystemException ex)
-            {
-                Debug.WriteLine("Error loading: " + xmlpath);
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
+                t.Segments.Add(seg);
             }
 
-            return lowerTool;
+            var totalSegLength = t.Segments.Sum(i => i.Length * i.Quantity);
+
+            if (totalSegLength > 0)
+                t.Length = totalSegLength;
+
+            return t;
         }
 
         public void Print()
         {
-            Console.WriteLine(Name);
+            Console.WriteLine(ToolName);
             Console.WriteLine("  Length:      {0}", Length);
             Console.WriteLine("  Angle:       {0}", Angle);
             Console.WriteLine("  Radius:      {0}", Radius);
@@ -112,7 +91,7 @@ namespace CincyLib.PressBrake
             Console.WriteLine("  MaxLoad:     {0}", MaxLoad);
             Console.WriteLine("  Offset:      {0}", Offset);
             Console.WriteLine("  Type:        {0}", Type);
-            Console.WriteLine("  Bend Radius: {0}", BendRadius());
+            Console.WriteLine("  Bend Radius: {0}", DevelopedRadius());
         }
     }
 }

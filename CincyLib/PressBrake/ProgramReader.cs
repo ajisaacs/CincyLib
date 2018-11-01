@@ -14,32 +14,14 @@ namespace CincyLib.PressBrake
             Program = new Program();
         }
 
-        public bool Read(string file)
+        public void Read(string file)
         {
-            Stream stream = null;
+            var stream = File.OpenRead(file);
             Program.FilePath = file;
-
-            var success = false;
-
-            try
-            {
-                stream = File.OpenRead(file);
-                success = Read(stream);
-            }
-            catch (SystemException ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-
-            return success;
+            Read(stream);
         }
 
-        public bool Read(Stream stream)
+        public void Read(Stream stream)
         {
             var xml = XDocument.Load(stream);
 
@@ -72,8 +54,6 @@ namespace CincyLib.PressBrake
                 var step = ReadStep(item);
                 Program.Steps.Add(step);
             }
-
-            return true;
         }
 
         private ToolSetup ReadToolSetup(XElement x)

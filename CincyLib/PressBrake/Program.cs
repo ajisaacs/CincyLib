@@ -45,14 +45,14 @@ namespace CincyLib.PressBrake
         public static Program Read(string file)
         {
             var reader = new ProgramReader();
-            var success=  reader.Read(file);
+            reader.Read(file);
             return reader.Program;
         }
 
         public static Program Read(Stream stream)
         {
             var reader = new ProgramReader();
-            var success = reader.Read(stream);
+            reader.Read(stream);
             return reader.Program;
         }
     }

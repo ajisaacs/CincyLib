@@ -86,9 +86,11 @@ namespace CincyLib.PressBrake
         }
     }
 
-    public class LogEvent
+    public abstract class LogEvent
     {
         public DateTime? DateTime { get; set; }
+
+        public abstract EventType EventType { get; }
     }
 
     public class ProgramStart : LogEvent
@@ -97,6 +99,7 @@ namespace CincyLib.PressBrake
         public string RamGageMode { get; set; }
         public string LowerTool { get; internal set; }
         public string UpperTool { get; internal set; }
+        public override EventType EventType => EventType.ProgramStart;
     }
 
     public class ProgramStop : LogEvent
@@ -113,10 +116,19 @@ namespace CincyLib.PressBrake
         public double? PowerOnTime { get; internal set; }
         public double? MainDriveOnTime { get; internal set; }
         public double? CurrentCycleTimeSec { get; internal set; }
+        public override EventType EventType => EventType.ProgramStop;
     }
 
     public class Fault : LogEvent
     {
         public string Message { get; set; }
+        public override EventType EventType => EventType.Fault;
+    }
+
+    public enum EventType
+    {
+        ProgramStart,
+        ProgramStop,
+        Fault
     }
 }

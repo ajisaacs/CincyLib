@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace CincyLib.PressBrake
@@ -16,18 +17,23 @@ namespace CincyLib.PressBrake
 
         public void Read(string file)
         {
-            var stream = File.OpenRead(file);
+            var xml = XDocument.Load(file);
             Program.FilePath = file;
-            Read(stream);
+            Read(xml);
         }
 
         public void Read(Stream stream)
         {
             var xml = XDocument.Load(stream);
+            Read(xml);
+        }
 
-            var data = xml.Root.Element("PressBrakeProgram");
+        private void Read(XDocument doc)
+        {
+            var data = doc.Root.Element("PressBrakeProgram");
 
             Program.Version = data.Attribute("Version").ToInt();
+            Program.ProgName = data.Attribute("ProgName")?.Value;
             Program.MatThick = data.Attribute("MatThick").ToDouble();
             Program.MatType = GetMaterialType(data.Attribute("MatType")?.Value);
             Program.KFactor = data.Attribute("KFactor").ToDouble();
@@ -52,6 +58,9 @@ namespace CincyLib.PressBrake
             foreach (var item in data.Element("StepData").Descendants("Step"))
             {
                 var step = ReadStep(item);
+                step.UpperTool = Program.UpperToolSets.FirstOrDefault(t => t.Id == step.UpperID);
+                step.LowerTool = Program.LowerToolSets.FirstOrDefault(t => t.Id == step.LowerID);
+
                 Program.Steps.Add(step);
             }
         }
@@ -105,6 +114,7 @@ namespace CincyLib.PressBrake
             step.SSRight = x.Attribute("SSRight").ToDouble();
             step.ReturnSpd = x.Attribute("ReturnSpd").ToDouble();
             step.SideFlgHeight = x.Attribute("SideFlgHeight").ToDouble();
+
             return step;
         }
 

@@ -28,5 +28,8 @@
         public double SSRight { get; set; }
         public double ReturnSpd { get; set; }
         public double SideFlgHeight { get; set; }
+
+        public ToolSetup UpperTool { get; set; }
+        public ToolSetup LowerTool { get; set; }
     }
 }

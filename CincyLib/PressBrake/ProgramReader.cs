@@ -101,6 +101,7 @@ namespace CincyLib.PressBrake
             step.LowerID = x.Attribute("LowerID").ToInt();
             step.SpdChgDwn = x.Attribute("SpdChgDwn").ToDouble();
             step.SpdChgUp = x.Attribute("SpdChgUp").ToDouble();
+            step.Tilt = x.Attribute("Tilt").ToDouble();
             step.FormSpeed = x.Attribute("FormSpeed").ToDouble();
             step.XLeft = x.Attribute("XLeft").ToDouble();
             step.XRight = x.Attribute("XRight").ToDouble();

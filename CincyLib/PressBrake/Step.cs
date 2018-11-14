@@ -10,6 +10,7 @@
         public double AngleAdj { get; set; }
         public double BendLen { get; set; }
         public double StrokeLen { get; set; }
+        public double Tilt { get; set; }
         public int UpperID { get; set; }
         public int LowerID { get; set; }
         public double SpdChgDwn { get; set; }

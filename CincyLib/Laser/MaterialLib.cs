@@ -10,7 +10,7 @@ namespace CincyLib.Laser
             RampedPierceSteps = new RampedPierceStep[MaxSteps];
         }
 
-        public string Name { get; set; }
+        public string Path { get; set; }
 
         public string Machine { get; set; }
 
@@ -18,7 +18,7 @@ namespace CincyLib.Laser
 
         public PierceType PierceType { get; set; }
 
-        public float PierceDwell { get; set; }
+        public double PierceDwell { get; set; }
 
         public int PiercePower { get; set; }
 
@@ -26,9 +26,9 @@ namespace CincyLib.Laser
 
         public int PierceDutyCycle { get; set; }
 
-        public float PierceZHoldDistance { get; set; }
+        public double PierceZHoldDistance { get; set; }
 
-        public float PierceNozzleStandoffRampFrom { get; set; }
+        public double PierceNozzleStandoffRampFrom { get; set; }
 
         //public float PierceNozzleStandoffRampTo { get; set; }
 
@@ -40,11 +40,11 @@ namespace CincyLib.Laser
 
         public int RampedPierceStartPower { get; set; }
 
-        public float RampedPierceCoolingTime { get; set; }
+        public double RampedPierceCoolingTime { get; set; }
 
         public RampedPierceStep[] RampedPierceSteps;
 
-        public float PierceTime()
+        public double PierceTime()
         {
             switch (PierceType)
             {
@@ -73,9 +73,9 @@ namespace CincyLib.Laser
 
         public int Feedrate { get; set; }
 
-        //public float PreCutDwell { get; set; } // seconds
+        public double PreCutDwellSeconds { get; set; } // seconds
 
-        public float KerfWidth { get; set; } // inches
+        public double KerfWidth { get; set; } // inches
 
         //public float PowerBurstTime { get; set; } // seconds
 
@@ -85,12 +85,12 @@ namespace CincyLib.Laser
 
         public bool UsePartCoolantOnCut { get; set; }
 
-        public float NozzleStandoff1 { get; set; }
+        public double NozzleStandoff1 { get; set; }
 
         /// <summary>
         /// Optional standoff (M45)
         /// </summary>
-        public float NozzleStandoff2 { get; set; }
+        public double NozzleStandoff2 { get; set; }
 
         public AssistGasType AssistGas { get; set; }
 
@@ -102,6 +102,12 @@ namespace CincyLib.Laser
         public int AssistGasPressure2 { get; set; }
 
         #endregion
+
+        public double CutFocusNearField { get; set; }
+        public double CutFocusFarField { get; set; }
+
+        public double PierceFocusNearField { get; set; }
+        public double PierceFocusFarField { get; set; }
 
         /// <summary>
         /// Dynamic power control feedrate.
@@ -122,7 +128,8 @@ namespace CincyLib.Laser
         public static MaterialLib Load(string libfile)
         {
             var reader = new MaterialLibReader();
-            return reader.Read(libfile) ? reader.MaterialLib : null;
+            reader.Read(libfile);
+            return reader.MaterialLib;
         }
     }
 }

@@ -3,9 +3,9 @@ namespace CincyLib.Laser
 {
     public struct RampedPierceStep
     {
-        public float Time;
+        public double Time { get; set; }
 
-        public int Power;
+        public int Power { get; set; }
 
         public override string ToString()
         {

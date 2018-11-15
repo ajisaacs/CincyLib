@@ -33,7 +33,7 @@ namespace CincyLib.Laser
             var reader = new BinaryReader(stream);
 
             MaterialLib.Machine = reader.ReadString();
-            MaterialLib.PierceDwell = reader.ReadSingle();
+            MaterialLib.PierceDwell = Math.Round(reader.ReadSingle(), 4);
 
             reader.BaseStream.Seek(2, SeekOrigin.Current); // Unknown 2 bytes
             MaterialLib.PiercePower = reader.ReadInt16();
@@ -55,9 +55,9 @@ namespace CincyLib.Laser
 
             reader.BaseStream.Seek(1, SeekOrigin.Current); // Unknown 1 byte
 
-            MaterialLib.PierceNozzleStandoffRampFrom = reader.ReadSingle();
+            MaterialLib.PierceNozzleStandoffRampFrom = Math.Round(reader.ReadSingle(), 4);
 
-            MaterialLib.RampedPierceCoolingTime = reader.ReadSingle();
+            MaterialLib.RampedPierceCoolingTime = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.UsePartCoolantOnPierce = Convert.ToBoolean(reader.ReadInt16());
 
             MaterialLib.PierceAssistGas = (AssistGasType)reader.ReadInt16();
@@ -73,8 +73,8 @@ namespace CincyLib.Laser
             MaterialLib.DPCMinPower = reader.ReadInt16();
 
             reader.BaseStream.Seek(4, SeekOrigin.Current); // Unknown 4 bytes
-            MaterialLib.NozzleStandoff1 = reader.ReadSingle();
-            MaterialLib.KerfWidth = reader.ReadSingle();
+            MaterialLib.NozzleStandoff1 = Math.Round(reader.ReadSingle(), 4);
+            MaterialLib.KerfWidth = Math.Round(reader.ReadSingle(), 4);
 
             reader.BaseStream.Seek(2, SeekOrigin.Current); // Unknown 2 bytes
             MaterialLib.AssistGas = (AssistGasType)reader.ReadInt16();
@@ -94,7 +94,7 @@ namespace CincyLib.Laser
             for (int i = 0; i < steps; ++i)
             {
                 MaterialLib.RampedPierceSteps[i] = new RampedPierceStep();
-                MaterialLib.RampedPierceSteps[i].Time = reader.ReadSingle();
+                MaterialLib.RampedPierceSteps[i].Time = Math.Round(reader.ReadSingle(), 4);
                 MaterialLib.RampedPierceSteps[i].Power = reader.ReadInt16();
             }
 

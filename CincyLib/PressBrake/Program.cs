@@ -42,14 +42,14 @@ namespace CincyLib.PressBrake
 
         public List<Step> Steps { get; set; }
 
-        public static Program Read(string file)
+        public static Program Load(string file)
         {
             var reader = new ProgramReader();
             reader.Read(file);
             return reader.Program;
         }
 
-        public static Program Read(Stream stream)
+        public static Program Load(Stream stream)
         {
             var reader = new ProgramReader();
             reader.Read(stream);

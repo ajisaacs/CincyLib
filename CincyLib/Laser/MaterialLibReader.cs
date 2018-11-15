@@ -117,22 +117,49 @@ namespace CincyLib.Laser
             reader.BaseStream.Seek(4, SeekOrigin.Current); // Unknown 4 bytes
             MaterialLib.Feedrate = reader.ReadInt16();
 
-            reader.BaseStream.Seek(428, SeekOrigin.Current);
+            reader.BaseStream.Seek(424, SeekOrigin.Current);
+            MaterialLib.NozzleStandoff2 = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.CutFocusNearField = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.CutFocusFarField = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.PierceFocusNearField = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.PierceFocusFarField = Math.Round(reader.ReadSingle(), 4);
 
             // older files wont go this far...
-            const int seek = 88;
+            const int seek = 76;
 
             var hasExtendedInfo = reader.BaseStream.Length > reader.BaseStream.Position + seek;
-            reader.BaseStream.Seek(seek, SeekOrigin.Current);
 
             if (hasExtendedInfo)
             {
+                reader.BaseStream.Seek(seek, SeekOrigin.Current);
+                MaterialLib.Lens = (LensType)reader.ReadByte();
+
+                reader.BaseStream.Seek(1, SeekOrigin.Current);
+                MaterialLib.Nozzle = reader.ReadString();
+
+                reader.BaseStream.Seek(4, SeekOrigin.Current);
                 MaterialLib.PierceType = (PierceType)reader.ReadByte();
             }
         }
+    }
+
+    public enum LensType
+    {
+        /// <summary>
+        /// 5.0" Lens
+        /// </summary>
+        _050 = 0,
+
+        /// <summary>
+        /// 7.5" Lens
+        /// </summary>
+        _075 = 1,
+
+        /// <summary>
+        /// 10.0" Lens
+        /// </summary>
+        _100 = 2,
+
+        Any = 3
     }
 }

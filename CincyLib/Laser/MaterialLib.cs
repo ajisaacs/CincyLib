@@ -34,6 +34,10 @@ namespace CincyLib.Laser
 
         public AssistGasType PierceAssistGas { get; set; }
 
+        public LensType Lens { get; set; }
+
+        public string Nozzle { get; set; }
+
         public int PierceAssistGasPressure { get; set; }
 
         public bool UsePartCoolantOnPierce { get; set; }

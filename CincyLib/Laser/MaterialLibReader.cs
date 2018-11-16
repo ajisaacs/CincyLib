@@ -132,7 +132,26 @@ namespace CincyLib.Laser
             if (hasExtendedInfo)
             {
                 reader.BaseStream.Seek(seek, SeekOrigin.Current);
-                MaterialLib.Lens = (LensType)reader.ReadByte();
+
+                var lensType = reader.ReadByte();
+                switch (lensType)
+                {
+                    case 0:
+                        MaterialLib.Lens = "5\"";
+                        break;
+
+                    case 1:
+                        MaterialLib.Lens = "7.5\"";
+                        break;
+
+                    case 2:
+                        MaterialLib.Lens = "10\"";
+                        break;
+
+                    case 3:
+                        MaterialLib.Lens = "Any";
+                        break;
+                }
 
                 reader.BaseStream.Seek(1, SeekOrigin.Current);
                 MaterialLib.Nozzle = reader.ReadString();

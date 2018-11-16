@@ -34,7 +34,7 @@ namespace CincyLib.Laser
 
         public AssistGasType PierceAssistGas { get; set; }
 
-        public LensType Lens { get; set; }
+        public string Lens { get; set; }
 
         public string Nozzle { get; set; }
 

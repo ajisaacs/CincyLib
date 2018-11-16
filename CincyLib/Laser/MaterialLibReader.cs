@@ -125,15 +125,18 @@ namespace CincyLib.Laser
             MaterialLib.PierceFocusFarField = Math.Round(reader.ReadSingle(), 4);
 
             // older files wont go this far...
-            const int seek = 76;
+            const int seek = 18;
 
             var hasExtendedInfo = reader.BaseStream.Length > reader.BaseStream.Position + seek;
 
             if (hasExtendedInfo)
             {
                 reader.BaseStream.Seek(seek, SeekOrigin.Current);
+                MaterialLib.PierceNozzleStandoffRampTo = Math.Round(reader.ReadSingle(), 4);
 
+                reader.BaseStream.Seek(54, SeekOrigin.Current);
                 var lensType = reader.ReadByte();
+
                 switch (lensType)
                 {
                     case 0:

@@ -30,7 +30,7 @@ namespace CincyLib.Laser
 
         public double PierceNozzleStandoffRampFrom { get; set; }
 
-        //public float PierceNozzleStandoffRampTo { get; set; }
+        public double PierceNozzleStandoffRampTo { get; set; }
 
         public AssistGasType PierceAssistGas { get; set; }
 

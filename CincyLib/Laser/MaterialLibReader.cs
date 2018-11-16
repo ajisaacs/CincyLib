@@ -72,7 +72,7 @@ namespace CincyLib.Laser
             MaterialLib.DPCFeedrate = reader.ReadInt16();
             MaterialLib.DPCMinPower = reader.ReadInt16();
 
-            reader.BaseStream.Seek(4, SeekOrigin.Current); // Unknown 4 bytes
+            MaterialLib.PowerBurstTime = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.NozzleStandoff1 = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.KerfWidth = Math.Round(reader.ReadSingle(), 4);
 

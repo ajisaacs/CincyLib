@@ -81,7 +81,10 @@ namespace CincyLib.Laser
 
         public double KerfWidth { get; set; } // inches
 
-        //public float PowerBurstTime { get; set; } // seconds
+        /// <summary>
+        /// Power burst time in seconds
+        /// </summary>
+        public double PowerBurstTime { get; set; } // seconds
 
         public bool DynamicPowerControl { get; set; }
 

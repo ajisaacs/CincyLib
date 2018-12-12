@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace CincyLib.PressBrake
@@ -14,6 +17,8 @@ namespace CincyLib.PressBrake
             xml = xml.Insert(0, "<LogFile>");
             xml += "</LogFile>";
 
+            xml = EscapeXml(xml);
+
             var doc = XDocument.Parse(xml);
             var elem = doc.Element("LogFile");
 
@@ -21,8 +26,6 @@ namespace CincyLib.PressBrake
 
             foreach (var e in elem.Elements())
             {
-                Console.WriteLine(e.Name);
-
                 var name = e.Name.ToString();
 
                 switch (name)
@@ -44,11 +47,24 @@ namespace CincyLib.PressBrake
             return events;
         }
 
+        static string EscapeXml(string xml)
+        {
+            var ampPattern = "&(?!amp;)";
+            xml = Regex.Replace(xml, ampPattern, "&amp;");
+
+            return xml;
+        }
+
+        static string UnescapeXml(string xml)
+        {
+            return xml.Replace("&amp;", "&");
+        }
+
         static ProgramStart ReadProgramStart(XElement e)
         {
             var programStart = new ProgramStart();
             programStart.DateTime = e.Attribute("DateTime").ToDateTime();
-            programStart.ProgramName = e.FirstNode.NodeType == System.Xml.XmlNodeType.Text ? e.FirstNode.ToString().Trim() : null;
+            programStart.ProgramName = e.FirstNode.NodeType == System.Xml.XmlNodeType.Text ? UnescapeXml(e.FirstNode.ToString()).Trim() : null;
             programStart.RamGageMode = e.Element("RamGageMode")?.Value;
             programStart.UpperTool = e.Element("UpperTool")?.Value;
             programStart.LowerTool = e.Element("LowerTool")?.Value;
@@ -60,7 +76,7 @@ namespace CincyLib.PressBrake
         {
             var programStop = new ProgramStop();
             programStop.DateTime = e.Attribute("DateTime").ToDateTime();
-            programStop.ProgramName = e.FirstNode.NodeType == System.Xml.XmlNodeType.Text ? e.FirstNode.ToString().Trim() : null;
+            programStop.ProgramName = e.FirstNode.NodeType == System.Xml.XmlNodeType.Text ? UnescapeXml(e.FirstNode.ToString()).Trim() : null;
             programStop.TotalPartCounter = e.Element("TotalPartCounter").ToIntOrNull();
             programStop.CurrentPartCounter = e.Element("CurrentPartCounter").ToIntOrNull();
             programStop.BatchCounter = e.Element("BatchCounter").ToIntOrNull();

@@ -112,6 +112,7 @@ namespace CincyLib.Laser
 
                 length = length * third + second + third;
             }
+
             MaterialLib.Notes = Encoding.ASCII.GetString(reader.ReadBytes(length));
 
             reader.BaseStream.Seek(4, SeekOrigin.Current); // Unknown 4 bytes
@@ -124,44 +125,48 @@ namespace CincyLib.Laser
             MaterialLib.PierceFocusNearField = Math.Round(reader.ReadSingle(), 4);
             MaterialLib.PierceFocusFarField = Math.Round(reader.ReadSingle(), 4);
 
-            // older files wont go this far...
-            const int seek = 18;
+            long p;
 
-            var hasExtendedInfo = reader.BaseStream.Length > reader.BaseStream.Position + seek;
+            p = reader.BaseStream.Position + 18;
 
-            if (hasExtendedInfo)
+            if (p >= reader.BaseStream.Length)
+                return;
+
+            reader.BaseStream.Seek(p, SeekOrigin.Begin);
+            MaterialLib.PierceNozzleStandoffRampTo = Math.Round(reader.ReadSingle(), 4);
+
+            p = reader.BaseStream.Position + 54;
+
+            if (p >= reader.BaseStream.Length)
+                return;
+
+            reader.BaseStream.Seek(p, SeekOrigin.Begin);
+            var lensType = reader.ReadByte();
+
+            switch (lensType)
             {
-                reader.BaseStream.Seek(seek, SeekOrigin.Current);
-                MaterialLib.PierceNozzleStandoffRampTo = Math.Round(reader.ReadSingle(), 4);
+                case 0:
+                    MaterialLib.Lens = "5\"";
+                    break;
 
-                reader.BaseStream.Seek(54, SeekOrigin.Current);
-                var lensType = reader.ReadByte();
+                case 1:
+                    MaterialLib.Lens = "7.5\"";
+                    break;
 
-                switch (lensType)
-                {
-                    case 0:
-                        MaterialLib.Lens = "5\"";
-                        break;
+                case 2:
+                    MaterialLib.Lens = "10\"";
+                    break;
 
-                    case 1:
-                        MaterialLib.Lens = "7.5\"";
-                        break;
-
-                    case 2:
-                        MaterialLib.Lens = "10\"";
-                        break;
-
-                    case 3:
-                        MaterialLib.Lens = "Any";
-                        break;
-                }
-
-                reader.BaseStream.Seek(1, SeekOrigin.Current);
-                MaterialLib.Nozzle = reader.ReadString();
-
-                reader.BaseStream.Seek(4, SeekOrigin.Current);
-                MaterialLib.PierceType = (PierceType)reader.ReadByte();
+                case 3:
+                    MaterialLib.Lens = "Any";
+                    break;
             }
+
+            reader.BaseStream.Seek(1, SeekOrigin.Current);
+            MaterialLib.Nozzle = reader.ReadString();
+
+            reader.BaseStream.Seek(4, SeekOrigin.Current);
+            MaterialLib.PierceType = (PierceType)reader.ReadByte();
         }
     }
 

@@ -94,5 +94,10 @@ namespace CincyLib.PressBrake
             Console.WriteLine("  Type:        {0}", Type);
             Console.WriteLine("  Bend Radius: {0}", DevelopedRadius());
         }
+
+        public override string ToString()
+        {
+            return $"{ToolName}, {Length} LG";
+        }
     }
 }

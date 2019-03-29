@@ -87,6 +87,11 @@ namespace CincyLib.PressBrake
             Console.WriteLine("  Offset:    {0}", Offset);
             Console.WriteLine("  Type:      {0}", Type);
         }
+
+        public override string ToString()
+        {
+            return $"{ToolName}, {Length} LG";
+        }
     }
 
     public class ToolSegment

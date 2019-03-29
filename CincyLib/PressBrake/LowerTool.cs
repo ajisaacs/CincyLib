@@ -54,6 +54,7 @@ namespace CincyLib.PressBrake
 
             t.Version = data.Attribute("Version").ToInt();
             t.ToolName = data.Attribute("ToolName")?.Value;
+            t.Length = data.Attribute("Length").ToDouble();
             t.Type = data.Attribute("Type").ToInt();
             t.Height = data.Attribute("Height").ToDouble();
             t.Clearance = data.Attribute("Clearance").ToDouble();

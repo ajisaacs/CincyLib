@@ -56,7 +56,7 @@ namespace CincyLib.PressBrake
             upperTool.MaxLoad = data.Attribute("MaxLoad").ToDouble();
             upperTool.Angle = data.Attribute("Angle").ToDouble();
             upperTool.Radius = data.Attribute("Radius").ToDouble();
-            upperTool.Offset = data.Attribute("Radius").ToDouble();
+            upperTool.Offset = data.Attribute("Offset").ToDouble();
 
             foreach (var item in data.Element("SegmentList").Descendants("ToolSeg"))
             {

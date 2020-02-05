@@ -23,6 +23,7 @@ namespace CincyLib.Laser
         {
             using (var stream = File.OpenRead(file))
             {
+                MaterialLib.Name = Path.GetFileNameWithoutExtension(file);
                 MaterialLib.Path = file;
                 Read(stream);
             }

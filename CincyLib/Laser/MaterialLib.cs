@@ -10,6 +10,8 @@ namespace CincyLib.Laser
             RampedPierceSteps = new RampedPierceStep[MaxSteps];
         }
 
+        public string Name { get; set; }
+
         public string Path { get; set; }
 
         public string Machine { get; set; }

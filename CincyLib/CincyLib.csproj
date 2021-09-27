@@ -36,7 +36,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Laser\LaserWebPanel.cs" />
+    <Compile Include="Laser\CNCMode.cs" />
+    <Compile Include="Laser\CNCRunStatus.cs" />
+    <Compile Include="Laser\HighVoltage.cs" />
+    <Compile Include="Laser\LaserMains.cs" />
+    <Compile Include="Laser\LaserStatus.cs" />
+    <Compile Include="Laser\LaserWebClient.cs" />
     <Compile Include="Laser\ProductLog.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="PressBrake\LogDataParser.cs" />

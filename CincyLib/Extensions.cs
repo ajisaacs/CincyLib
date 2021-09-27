@@ -159,5 +159,13 @@ namespace CincyLib
 
             return d;
         }
+
+        public static DateTime RoundDown(this DateTime dt, TimeSpan d)
+        {
+            var modTicks = dt.Ticks % d.Ticks;
+            var delta = -modTicks;
+
+            return new DateTime(dt.Ticks + delta, dt.Kind);
+        }
     }
 }
